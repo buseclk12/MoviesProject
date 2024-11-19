@@ -19,24 +19,6 @@ namespace MoviesProject.Controllers
             return View(await _context.Directors.ToListAsync());
         }
 
-        // GET: Directors/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var director = await _context.Directors
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (director == null)
-            {
-                return NotFound();
-            }
-
-            return View(director);
-        }
-
         // GET: Directors/Create
         public IActionResult Create()
         {
@@ -44,48 +26,44 @@ namespace MoviesProject.Controllers
         }
 
         // POST: Directors/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Surname,IsRetired")] Director director)
+        public async Task<IActionResult> Create([Bind("Name,Surname,IsRetired")] Director director)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(director);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(director);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error saving director: {ex.Message}");
+                }
             }
+
             return View(director);
         }
 
         // GET: Directors/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var director = await _context.Directors.FindAsync(id);
-            if (director == null)
-            {
-                return NotFound();
-            }
+            if (director == null) return NotFound();
+
             return View(director);
         }
 
         // POST: Directors/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,IsRetired")] Director director)
         {
-            if (id != director.Id)
-            {
-                return NotFound();
-            }
+            if (id != director.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -93,59 +71,68 @@ namespace MoviesProject.Controllers
                 {
                     _context.Update(director);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception ex)
                 {
-                    if (!DirectorExists(director.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    Console.WriteLine($"Error updating director: {ex.Message}");
                 }
-                return RedirectToAction(nameof(Index));
             }
+
             return View(director);
         }
 
         // GET: Directors/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var director = await _context.Directors
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (director == null)
-            {
-                return NotFound();
-            }
+                .FirstOrDefaultAsync(d => d.Id == id);
+
+            if (director == null) return NotFound();
 
             return View(director);
         }
 
         // POST: Directors/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var director = await _context.Directors.FindAsync(id);
-            if (director != null)
+            try
             {
+                var director = await _context.Directors.FindAsync(id);
+                if (director == null) 
+                {
+                    TempData["Error"] = "Director not found.";
+                    return RedirectToAction(nameof(Index));
+                }
+
                 _context.Directors.Remove(director);
+                await _context.SaveChangesAsync();
+
+                TempData["Message"] = "Director successfully deleted.";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting director: {ex.Message}");
+                TempData["Error"] = "An error occurred while deleting the director.";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
-        private bool DirectorExists(int id)
+        // GET: Directors/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
-            return _context.Directors.Any(e => e.Id == id);
+            if (id == null) return NotFound();
+
+            var director = await _context.Directors
+                .FirstOrDefaultAsync(d => d.Id == id);
+
+            if (director == null) return NotFound();
+
+            return View(director);
         }
     }
 }
