@@ -26,15 +26,29 @@ namespace BLL.Services
                 }).ToList();
         }
 
-        public void AddMovie(MovieModel model)
+        public async Task AddMovie(MovieModel model)
         {
+            var director = new Director
+            {
+                Name = "Christopher",
+                Surname = "Nolan",
+                IsRetired = false
+            };
+
+            _context.Directors.Add(director);
+            await _context.SaveChangesAsync();
+
             var movie = new Movie
             {
-                Name = model.Name,
-                DirectorId = model.DirectorId
+                Name = "Inception",
+                ReleaseDate = new DateTime(2010, 7, 16),
+                TotalRevenue = 829895144,
+                DirectorId = director.Id // Bu ID, mevcut bir Director kaydını referans almalı
             };
+
             _context.Movies.Add(movie);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+
         }
     }
 }
