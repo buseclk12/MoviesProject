@@ -12,7 +12,7 @@
                 <p class="card-text">
                     <strong>Release Date:</strong> @movie.ReleaseDate?.ToString("yyyy-MM-dd")<br>
                     <strong>Total Revenue:</strong> $@movie.TotalRevenue<br>
-                    <strong>Director:</strong> @movie.Director.Name
+                    <strong>Director:</strong> @movie.Director.Name @movie.Director.Surname
                 </p>
                 <div class="d-flex justify-content-between gap-2">
                     <a asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-info btn-sm">

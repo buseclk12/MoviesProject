@@ -115,12 +115,17 @@ namespace MoviesProject.Controllers
         }
         private void PopulateDirectorsDropDownList(object selectedDirector = null)
         {
-            var directorsQuery = from d in _context.Directors
-                                 orderby d.Name
-                                 select d;
+            var directorsQuery = _context.Directors
+                .OrderBy(d => d.Name)
+                .Select(d => new
+                {
+                    Id = d.Id,
+                    FullName = d.Name + " " + d.Surname // Combine Name and Surname
+                });
 
-            ViewData["DirectorId"] = new SelectList(directorsQuery.AsNoTracking(), "Id", "Name", selectedDirector);
+            ViewData["DirectorId"] = new SelectList(directorsQuery.AsNoTracking(), "Id", "FullName", selectedDirector);
         }
+
         // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
