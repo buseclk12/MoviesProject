@@ -21,8 +21,8 @@ namespace BLL.DAL
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder
-                    .EnableSensitiveDataLogging(false) // Hassas veri günlüğü devre dışı bırakılıyor
-                    .UseNpgsql(_connectionString); // PostgreSQL kullanılıyor
+                    .EnableSensitiveDataLogging(false) 
+                    .UseNpgsql(_connectionString);
             }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,15 +31,13 @@ namespace BLL.DAL
                 .HasOne(m => m.Director)
                 .WithMany(d => d.Movies)
                 .HasForeignKey(m => m.DirectorId)
-                .OnDelete(DeleteBehavior.Restrict); // Foreign Key ilişki tanımı
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
 
-            // MovieGenre Composite Key
             modelBuilder.Entity<MovieGenre>()
                 .HasKey(mg => new { mg.MovieId, mg.GenreId });
 
-            // Genre Configuration (if applicable)
             modelBuilder.Entity<Genre>()
                 .Property(g => g.Id)
                 .ValueGeneratedOnAdd();

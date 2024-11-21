@@ -7,5 +7,5 @@ public class MovieModel
     public DateTime? ReleaseDate { get; set; }
     public decimal TotalRevenue { get; set; }
     public int DirectorId { get; set; }
-    public List<int> GenreIds { get; set; } // List of selected Genre IDs
+    public List<int> GenreIds { get; set; } 
 }

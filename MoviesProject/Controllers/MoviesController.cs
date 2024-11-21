@@ -201,7 +201,6 @@ namespace MoviesProject.Controllers
         {
             try
             {
-                // İlgili Movie kaydını bul
                 var movie = await _context.Movies.FindAsync(id);
                 if (movie == null)
                 {
@@ -209,34 +208,29 @@ namespace MoviesProject.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                // Movie kaydını veritabanından sil
                 _context.Movies.Remove(movie);
                 await _context.SaveChangesAsync();
 
-                // Başarılı mesajı ve yönlendirme
                 TempData["Message"] = "Movie successfully deleted.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                // Hata mesajı ve yönlendirme
                 Console.WriteLine($"Error deleting movie: {ex.Message}");
                 TempData["Error"] = "An error occurred while deleting the movie.";
                 return RedirectToAction(nameof(Index));
             }
         }
     }
-    // Command class for movie creation
     public class MovieCommand
     {
-        public int Id { get; set; } // Bu özelliği ekleyin
+        public int Id { get; set; } 
         public string Name { get; set; }
         public DateTime? ReleaseDate { get; set; }
         public decimal TotalRevenue { get; set; }
         public int DirectorId { get; set; }
     }
 
-    // Result class for movie creation
     public class MovieResult
     {
         public bool IsSuccessful { get; set; }

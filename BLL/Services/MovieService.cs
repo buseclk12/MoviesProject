@@ -43,7 +43,7 @@ namespace BLL.Services
                 Name = "Inception",
                 ReleaseDate = new DateTime(2010, 7, 16),
                 TotalRevenue = 829895144,
-                DirectorId = director.Id // Bu ID, mevcut bir Director kaydını referans almalı
+                DirectorId = director.Id 
             };
 
             _context.Movies.Add(movie);

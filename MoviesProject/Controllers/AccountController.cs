@@ -25,7 +25,6 @@ namespace MoviesProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Default to RoleId = 2 for regular users (assuming 1 = Admin, 2 = User)
                 user.RoleId = 2;
                 user.IsActive = true;
 
@@ -52,7 +51,6 @@ namespace MoviesProject.Controllers
                 u => u.UserName == username && u.Password == password && u.IsActive);
             if (user != null)
             {
-                // Create a cookie or session for authentication
                 HttpContext.Session.SetString("UserId", user.Id.ToString());
                 return RedirectToAction("Index", "Movies");
             }

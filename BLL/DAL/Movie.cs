@@ -9,10 +9,9 @@ namespace BLL.DAL
         public int Id { get; set; }
         
         public string Name { get; set; }
-        public DateTime? ReleaseDate { get; set; } // Nullable to allow no value
+        public DateTime? ReleaseDate { get; set; } 
         public decimal TotalRevenue { get; set; }
        
-        //fOREIGN KEY
         public int DirectorId { get; set; }
         public Director Director { get; set; }
         
